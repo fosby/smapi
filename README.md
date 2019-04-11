@@ -1,0 +1,3 @@
+# SurveyMonkeyR
+
+A work in progress interacting with SurveyMonkey V3 API detail and response views.  Very limited in scope at the moment....
