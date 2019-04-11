@@ -23,18 +23,26 @@ smResponse = function(surveyID,startDate = (Sys.Date()-1),accessToken){
         "Content-Type" = "application/json"
       )
     )
-    responseText = content(response, "text",encoding = "UTF-8")
-    responseJSON = fromJSON(responseText,flatten = TRUE)
-    surveyDetailsDF = as.data.frame(responseJSON$pages)
-    surveyDetailsUnnested = surveyDetailsDF %>% select(questions) %>% unnest()
-    headingData = parseHeadingDetails(surveyDetailsUnnested)
-    questionData = parseQuestionDetails(surveyDetailsUnnested)
-    otherData = parseOtherDetails(surveyDetailsUnnested)
-    questionData = left_join(questionData,otherData,by="QuestionID")
-    #keep function or pull up code from that function??
-    detailTable = buildDetailTable(headingData,questionData)
-    detailTable$SurveyID = as.character(detailTable$SurveyID)
-    return(detailTable)
+    if(response$status_code == 200){
+      responseText = content(response, "text",encoding = "UTF-8")
+      responseJSON = fromJSON(responseText,flatten = TRUE)
+      surveyDetailsDF = as.data.frame(responseJSON$pages)
+      surveyDetailsUnnested = surveyDetailsDF %>% select(questions) %>% unnest()
+      headingData = parseHeadingDetails(surveyDetailsUnnested)
+      questionData = parseQuestionDetails(surveyDetailsUnnested)
+      otherData = parseOtherDetails(surveyDetailsUnnested)
+      questionData = left_join(questionData,otherData,by="QuestionID")
+      #keep function or pull up code from that function??
+      detailTable = buildDetailTable(headingData,questionData)
+      detailTable$SurveyID = as.character(detailTable$SurveyID)
+      return(detailTable)
+    } else if (response$status_code == 404){
+      stop("HTTP 404.  Appears surveyID is incorrect or does not exist.  Please review.")
+    } else if (response$status_code == 401){
+      stop("HTTP 401.  Appears accessToken is incorrect.  Please review.")
+    } else{
+      stop("Something is amiss.  Please double check input arguments you passed in.  Bad internet??? :)")
+    }
   }
 
   getSurveyResponses = function(url,surveyID,headers){
