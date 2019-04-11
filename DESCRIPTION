@@ -2,7 +2,7 @@ Package: smapi
 Type: Package
 Title: Survey Monkey V3 API Survey Responses
 Version: 0.1.0
-Depends: tidyverse, httr, jsonlite
+Imports: tidyverse, httr, jsonlite
 Author: Brett Foster
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
