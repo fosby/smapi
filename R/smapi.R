@@ -72,7 +72,7 @@ smResponse = function(surveyID,startDate = (Sys.Date()-1),accessToken){
           if(tolower(startDate) == "all"){
             getSurveyResponses(responseJSON$links$`next`,surveyID)
           } else{
-            getSurveyResponses(paste(responseJSON$links$`next`,"&start_created_at",startDate,sep=''),surveyID)
+            getSurveyResponses(paste(responseJSON$links$`next`,"&start_created_at=",startDate,sep=''),surveyID)
           }
 
         }},
